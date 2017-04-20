@@ -28,7 +28,11 @@ class APIRoutesGenerator extends BaseGenerator
 
         $this->routeContents = file_get_contents($this->path);
 
-        $routesTemplate = TemplateUtil::getTemplate('api.routes.routes', 'laravel-generator');
+        if (!empty($this->commandData->config->prefixes['route'])) {
+            $routesTemplate = TemplateUtil::getTemplate('api.routes.prefix_routes', 'laravel-generator');
+        } else {
+            $routesTemplate = TemplateUtil::getTemplate('api.routes.routes', 'laravel-generator');
+        }
 
         $this->routesTemplate = TemplateUtil::fillTemplate($this->commandData->dynamicVars, $routesTemplate);
     }
@@ -39,7 +43,8 @@ class APIRoutesGenerator extends BaseGenerator
 
         file_put_contents($this->path, $this->routeContents);
 
-        $this->commandData->commandComment("\n".$this->commandData->config->mCamelPlural.' api routes added.');
+        // $this->commandData->commandComment("\n".$this->commandData->config->mCamelPlural.' api routes added.');
+        $this->commandData->commandComment("\n".$this->commandData->config->mCamel.' api routes added.');
     }
 
     public function rollback()
